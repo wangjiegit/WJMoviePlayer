@@ -92,9 +92,8 @@
         self.transitionView.frame = pgr.view.frame;
         [pgr setTranslation:CGPointZero inView:pgr.view];
     } else if (pgr.state == UIGestureRecognizerStateEnded) {
-        CGFloat alpha = 0;
-        [self.backgroundColor getRed:nil green:nil blue:nil alpha:&alpha];
-        if (alpha < 0.7) {
+        CGPoint velocity = [pgr velocityInView:pgr.view];
+        if (velocity.y > 500 && pgr.view.frame.origin.y > 0) {
             [self closeMoviePlayerView];
         } else {
             [UIView animateWithDuration:0.25 animations:^{
