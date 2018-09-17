@@ -80,7 +80,7 @@
         CGFloat height = rect.size.height - point.y;
         CGFloat width = rect.size.width * height / rect.size.height;
         CGFloat y = rect.origin.y + 1.5 * point.y;
-        CGFloat x = location.x - location.x * width / pgr.view.superview.frame.size.width + point.x ;
+        CGFloat x = location.x * (rect.size.width - width) / pgr.view.superview.frame.size.width + point.x + rect.origin.x;
         if (rect.origin.y < 0) {
             height = pgr.view.superview.frame.size.height;
             width = pgr.view.superview.frame.size.width;
