@@ -4,7 +4,7 @@
 //
 //  Created by 王杰 on 2018/9/15.
 //  Copyright © 2018年 wangjie. All rights reserved.
-//
+//  https://github.com/wangjiegit/WJMoviePlayer
 
 #import "AppDelegate.h"
 
