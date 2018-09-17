@@ -1,5 +1,7 @@
 # WJMoviePlayer
 
+![gif](https://github.com/wangjiegit/WJMoviePlayer/blob/master/WJMoviePlayer/WJMoviePlayer.gif)
+
 # WJMoviePlayerView是网络视频下载后播放视图 集成了下载动画 下拉关闭视图等功能
 
 @param NSURL *movieURL  //视频的URL
