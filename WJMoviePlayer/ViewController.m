@@ -42,6 +42,7 @@
     self.imgView.backgroundColor = [UIColor lightGrayColor];
     self.imgView.contentMode = UIViewContentModeScaleAspectFill;
     self.imgView.userInteractionEnabled = YES;
+    self.imgView.clipsToBounds = YES;
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playLocalMovie)];
     [self.imgView addGestureRecognizer:tgr];
     [header addSubview:self.imgView];
