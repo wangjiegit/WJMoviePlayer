@@ -1,7 +1,9 @@
 # WJMoviePlayer
 
 # WJMoviePlayerView是网络视频下载后播放视图 集成了下载动画 下拉关闭视图等功能
+
 @param NSURL *movieURL  //视频的URL
+
 @param UIImageView *coverView;//转场动画需要的View
 
 WJMoviePlayerView *playerView = [[WJMoviePlayerView alloc] init];
