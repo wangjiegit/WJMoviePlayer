@@ -22,3 +22,8 @@ playerView.coverView = imgView;
 self.imgView.image = coverImage;
 self.localURL = mediaURL;
 }];
+
+
+# WJMovieDownLoadManager 清理本地缓存
+
+[WJMovieDownLoadManager clearDisk];//清理本地缓存
