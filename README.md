@@ -1,4 +1,4 @@
-# WJMoviePlayer
+# WJMoviePlayer 播放网络视频（先下载，后播放，类似微信朋友圈效果）
 
 ![gif](https://github.com/wangjiegit/WJMoviePlayer/blob/master/WJMoviePlayer/WJMoviePlayer.gif)
 
@@ -9,8 +9,11 @@
 @param UIImageView *coverView;//转场动画需要的View
 
 WJMoviePlayerView *playerView = [[WJMoviePlayerView alloc] init];
+
 playerView.movieURL = webURL;
+
 playerView.coverView = imgView;
+
 [playerView show];
 
 
@@ -21,8 +24,11 @@ playerView.coverView = imgView;
 @param NSTimeInterval videoMaximumDuration;//编辑本地视频的最大时间
 
 [[WJPhotoMovieManager manager] showControllerWithCallBack:^(NSURL *mediaURL, UIImage *coverImage) {
+
 self.imgView.image = coverImage;
+
 self.localURL = mediaURL;
+
 }];
 
 
