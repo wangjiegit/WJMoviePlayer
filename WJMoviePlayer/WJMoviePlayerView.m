@@ -119,11 +119,13 @@
 
 //关闭视频播放
 - (void)closeMoviePlayerView {
+    [self.task cancel];
     [self.playerView.player pause];
     UIImage *image = [self getMovieCurrentImage];
-    if (!image) image = self.coverView.image;
-    self.transitionView.image = image;
-    self.transitionView.frame = [self convertRect:((AVPlayerLayer *)self.playerView.layer).videoRect fromView:self.playerView];
+    if (image) {
+        self.transitionView.image = image;
+        self.transitionView.frame = [self convertRect:((AVPlayerLayer *)self.playerView.layer).videoRect fromView:self.playerView];
+    }
     self.transitionView.hidden = NO;
     self.playerView.hidden = YES;
     [UIView animateWithDuration:0.25 animations:^{
@@ -136,7 +138,6 @@
 }
 
 - (void)dealloc {
-    [self.task cancel];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (_playerView) [_playerView.layer removeObserver:self forKeyPath:@"readyForDisplay"];
 }
@@ -176,7 +177,7 @@
         self.playerView.player = [[AVPlayer alloc] initWithURL:URL];
     } fail:^(NSString *message) {
         [self.progressView removeFromSuperview];
-        [WJMovieHUD showWithMessage:@"视频下载失败"];
+        [WJMovieHUD showWithMessage:message];
     }];
 }
 
@@ -317,9 +318,9 @@ didCompleteWithError:(nullable NSError *)error {
     BOOL isExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
     dispatch_async(dispatch_get_main_queue(), ^{
         if (isExists) {
-            self.success([NSURL fileURLWithPath:filePath]);
+            if (self.success) self.success([NSURL fileURLWithPath:filePath]);
         } else {
-            self.fail(@"下载失败");
+            if (error.code != NSURLErrorCancelled && self.fail) self.fail(@"下载失败");
         }
         [self clearAllBlock];
     });
