@@ -24,24 +24,13 @@
 
 @implementation WJMoviePlayerView
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-    }
-    return self;
-}
-
 //展示
 - (void)show {
     if (self.movieURL.path.length == 0) {
         [WJMovieHUD showWithMessage:@"视频播放地址不存在"];
         return;
     }
-    self.frame = [UIScreen mainScreen].bounds;
-    self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
-    [self addSubview:self.transitionView];
-    [self addSubview:self.playerView];
+    [self setupUI];
     [[UIApplication sharedApplication].keyWindow addSubview:self];
     [UIView animateWithDuration:0.25 animations:^{
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
@@ -51,27 +40,28 @@
     }];
 }
 
+- (void)setupUI {
+    self.frame = [UIScreen mainScreen].bounds;
+    self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
+    [self addSubview:self.transitionView];
+    [self addSubview:self.playerView];
+}
+
 //判断视频地址是本地的还是网络的
 - (void)prepareMovie {
     if ([self.movieURL.scheme isEqualToString:@"file"]) {//本地视频
         self.playerURL = self.movieURL;
-        self.playerView.player = [[AVPlayer alloc] initWithURL:self.playerURL];
+        self.playerView.URL = self.playerURL;
     } else {
         [self insertSubview:self.progressView aboveSubview:self.transitionView];
         [self loadData];
     }
 }
 
-//播放结束 执行重复播放
-- (void)playerItemDidPlayToEnd {
-    [self.playerView.player seekToTime:kCMTimeZero];
-    [self.playerView.player play];
-}
-
 //移动当前视频
 - (void)movePanGestureRecognizer:(UIPanGestureRecognizer *)pgr {
     if (pgr.state == UIGestureRecognizerStateBegan) {
-        [self.playerView.player pause];
+        [self.playerView pause];
         self.progressView.hidden = YES;
     } else if (pgr.state == UIGestureRecognizerStateChanged) {
         CGPoint location = [pgr locationInView:pgr.view.superview];
@@ -101,7 +91,7 @@
                 pgr.view.frame = self.bounds;
                 self.transitionView.frame = self.bounds;
             } completion:^(BOOL finished) {
-                [self.playerView.player play];
+                [self.playerView play];
                 self.progressView.hidden = NO;
             }];
         }
@@ -112,14 +102,14 @@
 
 //监听视频是否已经准备好
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    [self.playerView.player play];
+    [self.playerView play];
     self.transitionView.hidden = YES;
 }
 
 //关闭视频播放
 - (void)closeMoviePlayerView {
     [self.task cancel];
-    [self.playerView.player pause];
+    [self.playerView pause];
     UIImage *image = [self getMovieCurrentImage];
     if (image) {
         self.transitionView.image = image;
@@ -137,7 +127,6 @@
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (_playerView) [_playerView.layer removeObserver:self forKeyPath:@"readyForDisplay"];
 }
 
@@ -156,7 +145,7 @@
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:self.playerURL options:nil];
     AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     gen.appliesPreferredTrackTransform = YES;
-    CMTime now = self.playerView.player.currentTime;
+    CMTime now = [self.playerView currentTime];
     [gen setRequestedTimeToleranceAfter:kCMTimeZero];
     [gen setRequestedTimeToleranceBefore:kCMTimeZero];
     CGImageRef image = [gen copyCGImageAtTime:now actualTime:NULL error:NULL];
@@ -173,7 +162,7 @@
     } success:^(NSURL *URL) {
         [self.progressView removeFromSuperview];
         self.playerURL = URL;
-        self.playerView.player = [[AVPlayer alloc] initWithURL:URL];
+        self.playerView.URL = self.playerURL;
     } fail:^(NSString *message) {
         [self.progressView removeFromSuperview];
         [WJMovieHUD showWithMessage:message];
@@ -220,12 +209,41 @@
     return [AVPlayerLayer class];
 }
 
-- (AVPlayer *)player {
-    return ((AVPlayerLayer *)self.layer).player;
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidPlayToEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    }
+    return self;
 }
 
-- (void)setPlayer:(AVPlayer *)player {
-    ((AVPlayerLayer *)self.layer).player = player;
+- (void)setURL:(NSURL *)URL {
+    if (_URL != URL) {
+        _URL = URL;
+        ((AVPlayerLayer *)self.layer).player = [AVPlayer playerWithURL:URL];
+    }
+}
+
+- (void)play {
+    [((AVPlayerLayer *)self.layer).player play];
+}
+
+- (void)pause {
+    [((AVPlayerLayer *)self.layer).player pause];
+}
+
+- (CMTime)currentTime {
+    return [((AVPlayerLayer *)self.layer).player currentTime];
+}
+
+//播放结束 执行重复播放
+- (void)playerItemDidPlayToEnd {
+    [((AVPlayerLayer *)self.layer).player seekToTime:kCMTimeZero];
+    [((AVPlayerLayer *)self.layer).player play];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

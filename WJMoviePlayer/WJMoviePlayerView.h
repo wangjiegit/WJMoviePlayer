@@ -23,7 +23,11 @@
 
 @interface WJPlayerView : UIView
 
-@property (nonatomic, strong) AVPlayer *player;
+@property (nonatomic, copy) NSURL *URL;
+
+- (void)play;
+- (void)pause;
+- (CMTime)currentTime;
 
 @end
 
