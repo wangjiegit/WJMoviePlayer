@@ -100,6 +100,11 @@
     }
 }
 
+//点击关闭
+- (void)closeTgrGestureRecognizer:(UITapGestureRecognizer *)tgr {
+    [self closeMoviePlayerView];
+}
+
 //监听视频是否已经准备好
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     [self.playerView play];
@@ -187,6 +192,8 @@
         UIPanGestureRecognizer *pgr = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(movePanGestureRecognizer:)];
         pgr.delegate = self;
         [_playerView addGestureRecognizer:pgr];
+        UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeTgrGestureRecognizer:)];
+        [_playerView addGestureRecognizer:tgr];
     }
     return _playerView;
 }
