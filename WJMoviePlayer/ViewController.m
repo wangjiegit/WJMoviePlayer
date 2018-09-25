@@ -12,9 +12,9 @@
 
 @interface ViewController ()<UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, copy) NSArray *dataSource;
-
 @property (nonatomic, strong) UIImageView *imgView;
+
+@property (nonatomic, copy) NSArray *dataSource;
 
 @property (nonatomic, copy) NSURL *localURL;
 
@@ -60,7 +60,6 @@
 
 //添加本地视频
 - (void)addLocalMovie {
-    //回调后已经置nil self不会导致循环引用
     [[WJPhotoMovieManager manager] showControllerWithCallBack:^(NSURL *mediaURL, UIImage *coverImage) {
         self.imgView.image = coverImage;
         self.localURL = mediaURL;
