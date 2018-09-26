@@ -361,6 +361,21 @@ didCompleteWithError:(nullable NSError *)error {
     return filePath;
 }
 
++ (CGFloat)fileSize {
+    unsigned long long  size = 0;
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *filePath = [self filePath];
+    NSDictionary *attributes = [manager attributesOfItemAtPath:filePath error:nil];
+    if (attributes.fileType == NSFileTypeDirectory) {
+         NSDirectoryEnumerator *enumerator = [manager enumeratorAtPath:filePath];
+        for (NSString *subPath in enumerator) {
+            NSString *fullSubPath = [filePath stringByAppendingPathComponent:subPath];
+            size += [manager attributesOfItemAtPath:fullSubPath error:nil].fileSize;
+        }
+    }
+    return size / 1024.0 / 1024.0;
+}
+
 + (void)clearDisk {
     [[NSFileManager defaultManager] removeItemAtPath:[self filePath] error:nil];
 }
@@ -413,7 +428,7 @@ didCompleteWithError:(nullable NSError *)error {
     if (self) {
         self.userInteractionEnabled = YES;
         label = [[UILabel alloc] init];
-        label.font = [UIFont systemFontOfSize:17];
+        label.font = [UIFont systemFontOfSize:15];
         label.textColor = [UIColor whiteColor];
         label.textAlignment = NSTextAlignmentCenter;
         label.text = message;

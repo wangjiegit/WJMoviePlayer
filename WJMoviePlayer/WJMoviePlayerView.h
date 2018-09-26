@@ -37,6 +37,9 @@
 
 + (instancetype)shareManager;
 
+//缓存大小 已经是M了
++ (CGFloat)fileSize;
+
 //删除本地缓存的视频
 + (void)clearDisk;
 
