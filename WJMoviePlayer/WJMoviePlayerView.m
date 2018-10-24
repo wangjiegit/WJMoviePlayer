@@ -53,6 +53,8 @@
         self.playerURL = self.movieURL;
         self.playerView.URL = self.playerURL;
     } else {
+        self.progressView = [[WJProgressView alloc] init];
+        self.progressView.frame = self.bounds;
         [self insertSubview:self.progressView aboveSubview:self.transitionView];
         [self loadData];
     }
@@ -175,14 +177,6 @@
 }
 
 #pragma mark Getter
-
-- (WJProgressView *)progressView {
-    if (!_progressView) {
-        _progressView = [[WJProgressView alloc] init];
-        _progressView.frame = self.bounds;
-    }
-    return _progressView;
-}
 
 - (UIView *)playerView {
     if (!_playerView) {
