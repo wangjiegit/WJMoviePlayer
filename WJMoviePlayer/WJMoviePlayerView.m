@@ -70,6 +70,7 @@
         CGPoint point = [pgr translationInView:pgr.view];
         CGRect rect = pgr.view.frame;
         CGFloat height = rect.size.height - point.y;
+        if (height <= 100) height = 100;
         CGFloat width = rect.size.width * height / rect.size.height;
         CGFloat y = rect.origin.y + 1.5 * point.y;
         CGFloat x = location.x * (rect.size.width - width) / pgr.view.superview.frame.size.width + point.x + rect.origin.x;
