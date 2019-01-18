@@ -31,7 +31,7 @@
         return;
     }
     [self setupUI];
-    [[UIApplication sharedApplication].keyWindow addSubview:self];
+    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:self];
     [UIView animateWithDuration:0.25 animations:^{
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:1];
         self.transitionView.frame = self.bounds;
@@ -445,7 +445,7 @@ didCompleteWithError:(nullable NSError *)error {
     WJMovieHUD *hud = [[WJMovieHUD alloc] initWithMessage:message];
     hud.backgroundColor = [UIColor clearColor];
     hud.frame = [UIScreen mainScreen].bounds;
-    [[UIApplication sharedApplication].keyWindow addSubview:hud];
+    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:hud];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [hud removeFromSuperview];
     });
