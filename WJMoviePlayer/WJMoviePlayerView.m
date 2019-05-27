@@ -86,7 +86,7 @@
         [pgr setTranslation:CGPointZero inView:pgr.view];
     } else if (pgr.state == UIGestureRecognizerStateEnded) {
         CGPoint velocity = [pgr velocityInView:pgr.view];
-        if (velocity.y > 500 && pgr.view.frame.origin.y > 0) {
+        if (velocity.y > 0 && pgr.view.frame.origin.y > 0) {
             [self closeMoviePlayerView];
         } else {
             [UIView animateWithDuration:0.25 animations:^{
